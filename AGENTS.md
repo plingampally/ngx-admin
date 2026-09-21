@@ -22,13 +22,24 @@ Strategy: one worktree + branch per major version so each step can be diffed and
 - `npm run lint`
 - `docker build -f Dockerfile.ci -t ngx-admin-a15-ci .` — clean-room proof (install + build + test) on Node 18; CI gate only, not for dev.
 
+## Playwright (smoke + navigation + theme + visual regression)
+
+- Lives in `playwright/` (the `e2e/` dir is dead Protractor). `playwright.config.ts` has **no `webServer` block** — always point `BASE_URL` at an already-running dev server:
+  - `BASE_URL=http://localhost:4215 npm run e2e:pw` — run against this branch's server
+  - `BASE_URL=http://localhost:4200 npm run e2e:pw` — run against the Angular 14 baseline
+  - `npm run e2e:pw:update` — regenerate snapshots (`--update-snapshots`)
+  - `npm run e2e:pw:report` — open the HTML report
+- **Golden policy:** snapshots in `playwright/tests/__snapshots__/` are captured from the *previous* Angular version's server (`:4200` for the 15 step) and committed. Never regenerate them from the server under test — the diff between goldens and the current version IS the migration evidence.
+- First run needs `npx playwright install chromium`.
+- 91 tests: 41 navigation, 4 smoke, 1 theme-cycle, 45 visual. Two navigation tests are `test.fixme` for pre-existing upstream console errors (`/pages/dashboard` echarts `setOption`, `/pages/editors/ckeditor` CKEditor strict-mode) — verified identical on Angular 14.
+
 ## Gate for every migration step
 
-`npm ci` (from empty node_modules) -> `npm run build:prod` -> `npm run test:ci` (35/35) -> `npm run lint`. Check the Karma "Executed N of N" line explicitly: the 15 step produced `Executed 0 of 0` with exit code 0 (see MIGRATION_LOG 15.1).
+`npm ci` (from empty node_modules) -> `npm run build:prod` -> `npm run test:ci` (63/63) -> `npm run lint`. Check the Karma "Executed N of N" line explicitly: the 15 step produced `Executed 0 of 0` with exit code 0 (see MIGRATION_LOG 15.1).
 
 ## Baseline test suite
 
-Upstream ships zero specs. The 14 baseline added 11 spec files (35 tests): theme pipes, `throwIfAlreadyLoaded`, `LayoutService`, `StateService`, `UserService`, `FooterComponent`, `AppComponent`. Expected: `Executed 35 of 35 SUCCESS`.
+Upstream ships zero specs. The 14 baseline added 11 spec files (35 tests): theme pipes, `throwIfAlreadyLoaded`, `LayoutService`, `StateService`, `UserService`, `FooterComponent`, `AppComponent`. The 15 step adds 6 more (28 tests): `CoreModule`/ACL, `AnalyticsService`, `SeoService`, `HeaderComponent` (wrapped in an `nb-layout` host for `nb-search`), `ThemeModule.forRoot`, `pages-menu` invariants. Expected: `Executed 63 of 63 SUCCESS`.
 Karma prints "Some of your tests did a full page reload!" after the run — caused by the legacy `pace-js`/`tinymce` global scripts in the test bundle, not the specs.
 
 ## Deviations from upstream v10.0.0 (setup-only)

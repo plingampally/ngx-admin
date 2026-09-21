@@ -73,9 +73,41 @@ Commits: `4fef29f5` prep, `15321be9` ng update + bumps, `72231de1` manual fix.
 
 | | Angular 14 | Angular 15 |
 |---|---|---|
-| Tests | 35/35 | 35/35 |
+| Tests | 35/35 | 63/63 |
 | Prod initial bundle (raw) | 4.50 MB | 4.34 MB |
 | Prod initial bundle (est. transfer) | 778.91 kB | 768.76 kB |
+
+### Visual regression (Playwright, goldens = Angular 14)
+
+Goldens captured from the Angular 14 dev server (`:4200`), compared against Angular 15 (`:4215`), 1366x900, `maxDiffPixelRatio` 0.01. 12 routes x 4 themes (`default`, `dark`, `cosmic`, `corporate`; auth pages default only) = 45 screenshots.
+
+**Result: zero visual diffs.** All 45 comparisons passed — Angular 15 + Nebular 11 renders pixel-identical to Angular 14 + Nebular 10 within tolerance on every covered page and theme.
+
+| Page | default | dark | cosmic | corporate |
+|---|---|---|---|---|
+| /pages/dashboard | pass | pass | pass | pass |
+| /pages/iot-dashboard | pass | pass | pass | pass |
+| /pages/tables/smart-table | pass | pass | pass | pass |
+| /pages/charts/echarts | pass | pass | pass | pass |
+| /pages/charts/chartjs | pass | pass | pass | pass |
+| /pages/charts/d3 | pass | pass | pass | pass |
+| /pages/maps/leaflet | pass | pass | pass | pass |
+| /pages/editors/tinymce | pass | pass | pass | pass |
+| /pages/forms/inputs | pass | pass | pass | pass |
+| /pages/ui-features/typography | pass | pass | pass | pass |
+| /pages/extra-components/calendar | pass | pass | pass | pass |
+| /auth/login | pass | — | — | — |
+
+Non-visual specs (smoke, navigation, theme switching) pass identically on both servers.
+
+Navigation/console-error findings (pre-existing upstream bugs, identical on 14 and 15 — `test.fixme`):
+
+| Route | Console error |
+|---|---|
+| /pages/dashboard | `CountryOrdersChartComponent.ngOnChanges`: `TypeError: Cannot read properties of undefined (reading 'setOption')` — echarts option not ready on first ngOnChanges |
+| /pages/editors/ckeditor | `TypeError: 'caller', 'callee', and 'arguments' properties may not be accessed on strict mode functions` — CKEditor 4.7.3 under webpack strict mode |
+
+Not covered: `/pages/maps/gmaps` (needs a Google Maps API key). Dashboard canvases are masked in visual tests (live-updating charts are nondeterministic); same for `nb-chat` and recent-users widgets.
 
 ---
 
