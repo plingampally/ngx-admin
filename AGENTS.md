@@ -31,7 +31,7 @@ Strategy: one worktree + branch per major version so each step can be diffed and
   - `npm run e2e:pw:report` — open the HTML report
 - **Golden policy:** snapshots in `playwright/tests/__snapshots__/` are captured from the *previous* Angular version's server (`:4200` for the 15 step) and committed. Never regenerate them from the server under test — the diff between goldens and the current version IS the migration evidence.
 - First run needs `npx playwright install chromium`.
-- 91 tests: 41 navigation, 4 smoke, 1 theme-cycle, 45 visual. Two navigation tests are `test.fixme` for pre-existing upstream console errors (`/pages/dashboard` echarts `setOption`, `/pages/editors/ckeditor` CKEditor strict-mode) — verified identical on Angular 14.
+- 91 tests: 41 navigation, 4 smoke, 1 theme-cycle, 45 visual. Two routes carry tolerated known console errors (`/pages/dashboard` echarts `setOption`, `/pages/editors/ckeditor` CKEditor strict-mode) — pre-existing upstream bugs verified identical on Angular 14; the routes still run and any *new* console error fails the test.
 
 ## Gate for every migration step
 

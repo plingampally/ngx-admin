@@ -100,7 +100,7 @@ Goldens captured from the Angular 14 dev server (`:4200`), compared against Angu
 
 Non-visual specs (smoke, navigation, theme switching) pass identically on both servers.
 
-Navigation/console-error findings (pre-existing upstream bugs, identical on 14 and 15 — `test.fixme`):
+Navigation/console-error findings (pre-existing upstream bugs, identical on 14 and 15 — tolerated known errors; route still checked for any other error):
 
 | Route | Console error |
 |---|---|
