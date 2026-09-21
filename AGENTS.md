@@ -1,29 +1,34 @@
-# ngx-admin — Angular 14 baseline
+# ngx-admin — Angular 14 -> 18 migration, step: Angular 15
 
-Branch `angular-14-baseline` is cut from upstream tag `v10.0.0` (Angular 14.2.x / Nebular 10 / TypeScript 4.6).
-It is the frozen "before" state for the Angular 14 -> 18 migration. Do not bump Angular, Nebular, or TypeScript on this branch.
+Branch `angular-15` (worktree `ngx-admin-v15`) is the 14 -> 15 step, branched from `angular-14-baseline` (worktree `ngx-admin`, upstream tag `v10.0.0`).
+Strategy: one worktree + branch per major version so each step can be diffed and tested independently. Per-step breakage is tracked in `MIGRATION_LOG.md` — update it whenever a step finds or fixes something.
 
 ## Toolchain (pinned)
 
-- Node **16.20.2** (`.nvmrc`, `.node-version`). Node 18+ is not supported by Angular CLI 14; Node 24 is the machine default.
-  - Local: `export PATH=~/.n/n/versions/node/16.20.2/bin:$PATH` (installed via `n` under `~/.n`).
-  - A `preinstall` script hard-fails `npm install`/`npm ci` on any non-16 Node. (`engine-strict=true` cannot be used: it also audits transitive deps such as `karma-cli@1.0.1`, which declare ancient engines.)
-- npm 8.x. `.npmrc` sets `save-exact=true` and `legacy-peer-deps=true` (required: `@angular/cdk@12.1.0` peer-conflicts with Angular 14).
+- Node **18.20.8** (`.nvmrc`, `.node-version`). Node 24 is the machine default and is not supported by Angular CLI 15.
+  - Local: `export PATH=~/.n/n/versions/node/18.20.8/bin:$PATH` (installed via `N_PREFIX=~/.n n install`). The 14 baseline uses `~/.n/n/versions/node/16.20.2`.
+  - A `preinstall` script hard-fails `npm install`/`npm ci` on any non-18 Node. (`engine-strict=true` cannot be used: it also audits transitive deps such as `karma-cli@1.0.1`, which declare ancient engines.)
+- npm 10.x. `.npmrc` sets `save-exact=true` and `legacy-peer-deps=true` (still required: `ng2-smart-table` peers on Angular ^10 and the other View Engine libs have stale peer ranges; removable once they are replaced in the 16 step).
 - Install with `npm ci` only, never `npm install` — `package-lock.json` is the actual version pin.
+- Versions on this branch: Angular 15.2.10, CLI 15.2.11, CDK 15.2.9, Nebular 11.0.1, TypeScript 4.9.5, zone.js 0.12.0, rxjs 6.6.2.
 
 ## Commands
 
-- `npm ci` — install (runs ngcc postinstall; ~1-2 min)
-- `npm start` — dev server on http://localhost:4200
+- `npm ci` — install (~1-2 min; no postinstall — ngcc runs on demand during build)
+- `npm start -- --port 4215` — dev server (4200 is used by the 14 baseline worktree)
 - `npm run build` — dev build
 - `npm run test:ci` — Karma headless, single run, with coverage. Needs system Chrome; if Karma cannot find it: `export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`.
 - `npm test` — Karma watch mode (opens Chrome)
 - `npm run lint`
-- `docker build -f Dockerfile.ci -t ngx-admin-a14-ci .` — clean-room proof (install + build + test) on Node 16; CI gate only, not for dev.
+- `docker build -f Dockerfile.ci -t ngx-admin-a15-ci .` — clean-room proof (install + build + test) on Node 18; CI gate only, not for dev.
+
+## Gate for every migration step
+
+`npm ci` (from empty node_modules) -> `npm run build:prod` -> `npm run test:ci` (35/35) -> `npm run lint`. Check the Karma "Executed N of N" line explicitly: the 15 step produced `Executed 0 of 0` with exit code 0 (see MIGRATION_LOG 15.1).
 
 ## Baseline test suite
 
-Upstream ships zero specs. This branch adds 11 spec files (35 tests): theme pipes, `throwIfAlreadyLoaded`, `LayoutService`, `StateService`, `UserService`, `FooterComponent`, `AppComponent`. Expected: `Executed 35 of 35 SUCCESS`.
+Upstream ships zero specs. The 14 baseline added 11 spec files (35 tests): theme pipes, `throwIfAlreadyLoaded`, `LayoutService`, `StateService`, `UserService`, `FooterComponent`, `AppComponent`. Expected: `Executed 35 of 35 SUCCESS`.
 Karma prints "Some of your tests did a full page reload!" after the run — caused by the legacy `pace-js`/`tinymce` global scripts in the test bundle, not the specs.
 
 ## Deviations from upstream v10.0.0 (setup-only)
