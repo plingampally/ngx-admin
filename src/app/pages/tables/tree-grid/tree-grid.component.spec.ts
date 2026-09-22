@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
+import { CDK_TABLE } from '@angular/cdk/table';
 
-import { NbCardModule, NbIconModule, NbInputModule, NbThemeModule, NbTreeGridModule } from '@nebular/theme';
+import { NbCardModule, NbIconModule, NbInputModule, NbThemeModule, NbTreeGridComponent, NbTreeGridModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 import { FsIconComponent, TreeGridComponent } from './tree-grid.component';
-import { TreeGridCdkTableDirective } from './tree-grid-cdk-table.directive';
 
 function configureTestingModule(declarations: any[]): void {
   TestBed.configureTestingModule({
@@ -26,7 +27,7 @@ describe('TreeGridComponent', () => {
   let fixture: ComponentFixture<TreeGridComponent>;
 
   beforeEach(() => {
-    configureTestingModule([TreeGridComponent, FsIconComponent, TreeGridCdkTableDirective]);
+    configureTestingModule([TreeGridComponent, FsIconComponent]);
     fixture = TestBed.createComponent(TreeGridComponent);
   });
 
@@ -37,21 +38,11 @@ describe('TreeGridComponent', () => {
     expect(rows.length).toBeGreaterThan(0);
     expect(fixture.nativeElement.querySelector('tr[nbtreegridheaderrow]')).not.toBeNull();
   });
-});
 
-describe('TreeGridComponent without TreeGridCdkTableDirective', () => {
-  it('fails with a CDK_TABLE NullInjectorError (regression covered by the directive)', () => {
-    configureTestingModule([TreeGridComponent, FsIconComponent]);
-
-    let thrown: any;
-    try {
-      const fixture = TestBed.createComponent(TreeGridComponent);
-      fixture.detectChanges();
-    } catch (e) {
-      thrown = e;
-    }
-
-    expect(thrown).toBeTruthy();
-    expect(String(thrown && thrown.message)).toContain('CDK_TABLE');
+  it('NbTreeGrid provides CDK_TABLE itself (Nebular 14, no app-side shim needed)', () => {
+    fixture.detectChanges();
+    const grid = fixture.debugElement.query(By.directive(NbTreeGridComponent));
+    expect(grid).not.toBeNull();
+    expect(grid.injector.get(CDK_TABLE)).toBe(grid.componentInstance);
   });
 });
