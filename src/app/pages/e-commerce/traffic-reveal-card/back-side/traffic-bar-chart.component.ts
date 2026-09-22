@@ -4,7 +4,6 @@ import { NbThemeService } from '@nebular/theme';
 import { takeWhile } from 'rxjs/operators';
 import { LayoutService } from '../../../../@core/utils/layout.service';
 
-
 @Component({
   selector: 'ngx-traffic-bar-chart',
   template: `
