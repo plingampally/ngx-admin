@@ -331,6 +331,8 @@ No Angular, Nebular, TypeScript or template compile error occurred. No `src/app/
 
 - Nebular 13 -> 14.0.2. Verified against the 14.0.2 tarball before pinning: `NbColumnDefDirective`/row defs now declare `sticky` as an accessor (so cdk 18.2.14 compiles — closes 17.2) and `NbTreeGridComponent`'s providers include `{ provide: CDK_TABLE, useExisting: NbTreeGridComponent }` (closes 17.3). Deleted `src/app/pages/tables/tree-grid/tree-grid-cdk-table.directive.ts` and its `TablesModule` declaration; `tree-grid.component.spec.ts` now asserts that the `NbTreeGridComponent` injector resolves `CDK_TABLE` to the grid itself (regression guard replaces the old "fails without the shim" test; count stays 69).
 - `@asymmetrik/ngx-leaflet` -> `@bluehalo/ngx-leaflet` 18.0.2: import path only in `maps.module.ts` and `e-commerce.module.ts`.
+- `.browserslistrc`: dropped `IE 11` (review finding). Angular >=13 ignores IE targets for JS anyway, so the policy just matches the removed polyfills; CSS output is unchanged (build/Playwright re-verified after the change, see PR review commit).
+- `README.md`: snapshot section updated from the stale Angular 16 / Node 18 / `:4216` text to Angular 18 / Node 20 / `:4218` (review finding; the 17 step had left it untouched).
 - `src/polyfills.ts`: removed `classlist.js`, `web-animations-js`, `core-js/es6/reflect`, `core-js/es7/{reflect,array,object}` (IE-era; Angular 18 supports only evergreen browsers). `import 'zone.js'` and the `SVGElement.prototype.contains` shim remain. `intl` was an unreferenced dependency.
 
 ### What did NOT break
