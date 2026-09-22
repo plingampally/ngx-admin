@@ -4,11 +4,11 @@
 
 # Installation notes
 
-To install ngx-admin you have to use NodeJS version 14.14+ because of [node-sass](https://github.com/sass/node-sass) version utilized in the application.
+To install ngx-admin you have to use NodeJS version 20.x; the `preinstall` guard rejects any other major.
 
-## Local Angular 16 snapshot
+## Local Angular 18 snapshot
 
-This worktree is pinned to Node 18.20.8 and its committed `package-lock.json`. Install dependencies with `npm ci` using Node 18.
+This worktree is pinned to Node 20.20.2 and its committed `package-lock.json`. Install dependencies with `npm ci` using Node 20.
 
 [Vercel Portless](https://github.com/vercel-labs/portless) runs outside the legacy app runtime. Install the pinned launcher once using Node 24.7.0 (`npm install --global portless@0.15.6`), then run:
 
@@ -16,7 +16,7 @@ This worktree is pinned to Node 18.20.8 and its committed `package-lock.json`. I
 npm run dev:portless
 ```
 
-The app is available at https://ngx-admin-v16.localhost. Use `npm run dev` for the raw http://localhost:4216 server.
+The app is available at https://ngx-admin-v18.localhost. Use `npm run dev` for the raw http://localhost:4218 server.
 
 # Material theme for ngx-admin
 

@@ -5,7 +5,6 @@ import { Angular2SmartTableModule } from 'angular2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
 import { TablesRoutingModule, routedComponents } from './tables-routing.module';
 import { FsIconComponent } from './tree-grid/tree-grid.component';
-import { TreeGridCdkTableDirective } from './tree-grid/tree-grid-cdk-table.directive';
 
 @NgModule({
   imports: [
@@ -20,7 +19,6 @@ import { TreeGridCdkTableDirective } from './tree-grid/tree-grid-cdk-table.direc
   declarations: [
     ...routedComponents,
     FsIconComponent,
-    TreeGridCdkTableDirective,
   ],
 })
 export class TablesModule { }

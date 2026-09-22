@@ -16,11 +16,6 @@
       "es2017",
       "dom"
     ],
-    "plugins": [
-      {
-        "name": "tslint-language-service"
-      }
-    ],
     "useDefineForClassFields": false
   }
 }

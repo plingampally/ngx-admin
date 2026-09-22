@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { NB_DOCUMENT } from '@nebular/theme';
@@ -33,10 +34,12 @@ describe('NB_CORE_PROVIDERS', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule],
       providers: [
         ...NB_CORE_PROVIDERS,
         { provide: NB_DOCUMENT, useValue: document },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
       ],
     });
     accessChecker = TestBed.inject(NbAccessChecker);
