@@ -6,7 +6,7 @@
 
 To install ngx-admin you have to use NodeJS version 14.14+ because of [node-sass](https://github.com/sass/node-sass) version utilized in the application.
 
-## Local Angular 15 snapshot
+## Local Angular 16 snapshot
 
 This worktree is pinned to Node 18.20.8 and its committed `package-lock.json`. Install dependencies with `npm ci` using Node 18.
 
@@ -16,7 +16,7 @@ This worktree is pinned to Node 18.20.8 and its committed `package-lock.json`. I
 npm run dev:portless
 ```
 
-The app is available at https://ngx-admin-v15.localhost. Use `npm run dev` for the raw http://localhost:4215 server.
+The app is available at https://ngx-admin-v16.localhost. Use `npm run dev` for the raw http://localhost:4216 server.
 
 # Material theme for ngx-admin
 

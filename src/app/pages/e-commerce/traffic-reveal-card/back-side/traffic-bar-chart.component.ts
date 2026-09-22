@@ -1,9 +1,8 @@
+import * as echarts from 'echarts';
 import { AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
 import { takeWhile } from 'rxjs/operators';
 import { LayoutService } from '../../../../@core/utils/layout.service';
-
-declare const echarts: any;
 
 @Component({
   selector: 'ngx-traffic-bar-chart',
