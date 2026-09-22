@@ -6,8 +6,8 @@ One worktree and one branch per major version. Each step must be green (`npm ci`
 |---|---|---|---|---|---|---|---|---|---|
 | Baseline | `angular-14-baseline` / `ngx-admin` (tag `angular-14-baseline-v1`) | 16.20.2 | 14.3.0 | 14.2.13 | 12.1.0 -> 14.2.7 (prep) | 10.0.0 | 4.6.4 | 0.11.4 | green |
 | 14 -> 15 | `angular-15` / `ngx-admin-v15` | 18.20.8 | 15.2.10 | 15.2.11 | 15.2.9 | 11.0.1 | 4.9.5 | 0.12.0 | green |
-| 15 -> 16 | `angular-16` / `ngx-admin-v16` | 18.20.8 | 16.2.x | | 16.2.x | 12.x | 4.9 / 5.1 | 0.13 | not started |
-| 16 -> 17 | `angular-17` / `ngx-admin-v17` | 18.20.8 or 20.x | 17.3.x | | 17.3.x | 13.x | 5.2-5.4 | 0.14 | not started |
+| 15 -> 16 | `angular-16` / `ngx-admin-v16` | 18.20.8 | 16.2.12 | 16.2.16 | 16.2.14 | 12.0.0 | 4.9.5 | 0.13.3 | green |
+| 16 -> 17 | `angular-17` / `ngx-admin-v17` | 18.20.8 | 17.3.12 | 17.3.17 | 17.2.1 (cap, see 17.2) | 13.0.0 | 5.4.5 | 0.14.10 | green |
 | 17 -> 18 | `angular-18` / `ngx-admin-v18` | 20.x | 18.2.x | | 18.2.x | 14.x | 5.4-5.5 | 0.14 | not started |
 
 Severity: **blocker** = build/test/install fails; **silent** = passes with wrong result (most dangerous); **warning** = deprecation or noise only.
@@ -198,20 +198,92 @@ Goldens recaptured from the Angular 15 server (`:4215`) on this machine (`3b5c6b
 - `angular2-smart-table` adds a horizontal-scroll wrapper and a `<angular2-smart-table-tags-list>` element; visually identical here but the DOM differs from `ng2-smart-table` — anything selecting on `ng2-smart-*` classes downstream must be renamed.
 - `chart.js` 2.7.1 is now driven by an in-repo wrapper; the library itself is unchanged and still a global script.
 
-## 16 -> 17 (not started)
+## 16 -> 17
 
-- zone.js 0.14: deep imports already removed in 16.2; only the version bump remains.
-- Node 18.13+ required.
-- TypeScript 5.2+.
-- `@asymmetrik/ngx-leaflet` renamed to `@bluehalo/ngx-leaflet`.
-- `@types/node@12` and pinned `@types/ws` will conflict with TS 5.x.
-- Optional, separate PR: esbuild `application` builder, `browserTarget` -> `buildTarget`. Global scripts (`tinymce`, `echarts`, `chart.js`, `pace`) and CommonJS deps behave differently under esbuild.
+Branch `angular-17`, worktree `ngx-admin-v17`, from `angular-16` @ `2c4151da`. Commits: `bf511213` prep, `bca35549` ng update, `3b5b19e3` version pins, `4c7822c0` CDK_TABLE fix, `f18bb655` tree-grid regression spec.
+
+Source baseline re-verified before starting (Node 18.20.8, npm 10.8.2, Chrome for Testing 137): `npm ci` ok, `build:prod` ok (3.43 MB / 533.25 kB), `test:ci` 67/67, `lint` 0 errors / 1 pre-existing warning, Playwright 91/91 against `:4216`. Recapturing goldens from `:4216` into the 17 worktree produced byte-identical files to the committed ones (Angular 16 renders pixel-identical to the Angular 15 images on this machine), so the committed goldens serve as the Angular 16 baseline. Logs in `<workspace-root>/logs/baseline16-*.log`, `17-*.log`.
+
+Workspace note: in this Devin environment `<workspace-root>/ngx-admin` is checked out on `angular-15` (not `angular-14-baseline`) and the shared log lives in the repo (`MIGRATION_LOG.md` on each branch) rather than in the parent directory. `ngx-admin-v16` and `ngx-admin-v17` were added as direct-sibling worktrees; no worktree was renamed or moved.
+
+### Versions
+
+| | Angular 16 | Angular 17 |
+|---|---|---|
+| Node / npm | 18.20.8 / 10.8.2 | 18.20.8 / 10.8.2 (CLI 17 needs ^18.13 \|\| >=20.9; no change, guard unchanged) |
+| @angular/* | 16.2.12 | 17.3.12 |
+| @angular/cli, build-angular | 16.2.16 | 17.3.17 |
+| @angular/cdk, google-maps | 16.2.14 | **17.2.1** (not 17.3.x — see 17.2) |
+| @nebular/* | 12.0.0 | 13.0.0 |
+| TypeScript | 4.9.5 | 5.4.5 (build-angular 17 allows >=5.2 <5.5) |
+| zone.js | 0.13.3 | 0.14.10 |
+| rxjs | 6.6.2 | 6.6.2 |
+| @angular-eslint/* | 16.3.1 | 17.5.3 |
+| @typescript-eslint/eslint-plugin, parser / eslint | 5.x / 8.23 | 7.18.0 / 8.57 |
+| ngx-echarts / echarts | 16.2.0 / 5.6.0 | 17.2.0 / 5.6.0 |
+| @asymmetrik/ngx-leaflet | 16.0.1 | 17.0.0 (the `@bluehalo/ngx-leaflet` rename starts at 18.0.2; no 17 exists under the new name) |
+| @types/node / @types/ws | 12.12 / 8.5.3 exact | 18.19.130 / ^8.5.3 (lock resolves 8.5.3) |
+| unchanged | | @swimlane/ngx-charts 20.5.0 (peers >=12), angular2-smart-table 3.8.0 (peers 16-20), ng2-ckeditor 1.3.7, chart.js 2.7.1, tinymce, leaflet |
+
+### Prep (`bf511213`, done while still on 16, kept green: build / 67 tests / lint)
+
+- `@types/node` ^12 -> ^18.19.130 (matches the runtime; 12 was the reason for the exact `@types/ws` pin). `@types/ws` relaxed to ^8.5.3.
+
+### Breaks
+
+| # | Break | Severity | Where | Fix |
+|---|---|---|---|---|
+| 17.1 | `ng update @angular/core@17 @angular/cli@17` refuses: `@angular-eslint/schematics@16.3.1` peers CLI `<17`, `tslint-language-service@0.9.9` peers `typescript <3` | blocker (tooling) | `logs/17-ng-update.log` | `--force`; angular-eslint moved to 17.5.3 in `3b5b19e3`, tslint-language-service is dead tooling scheduled for deletion in the 18 step. |
+| 17.2 | With `@angular/cdk` 17.3.x, Nebular 13 fails to compile: `NbColumnDefDirective`, `NbHeaderRowDefDirective`, `NbFooterRowDefDirective` declare `sticky` as a property but cdk >= 17.2.2 defines it as an accessor (TS2610) | blocker (build) | `node_modules/@nebular/theme` vs `@angular/cdk/table` | Pin `@angular/cdk` and `@angular/google-maps` to **17.2.1**, the highest release where `sticky` is still a plain property (verified by inspecting 17.2.1 vs 17.2.2 tarballs). Nebular 13 peers `^17.1.0`, so this is within range. Lifts with Nebular 14 in the 18 step. |
+| 17.3 | `/pages/tables/tree-grid` throws `NullInjectorError: No provider for InjectionToken CDK_TABLE` at runtime (Playwright navigation test 90/91) | blocker (runtime) | `src/app/pages/tables/tree-grid/` | cdk >= 17.1 row outlets (`DataRowOutlet` etc.) `inject(CDK_TABLE)` non-optionally; Nebular 13's `NbTreeGridComponent` overrides `CdkTable`'s providers with `NB_TABLE_PROVIDERS`, which lacks `{ provide: CDK_TABLE, useExisting }`. Added `TreeGridCdkTableDirective` (selector `table[nbTreeGrid]`) that provides `CDK_TABLE` via `useExisting: forwardRef(() => NbTreeGridComponent)`, declared in `TablesModule`. Upstream Nebular bug; delete the shim once Nebular 14 provides the token. `tree-grid.component.spec.ts` guards it. |
+
+### Automatic migrations applied by `ng update`
+
+- `angular.json`: `browserTarget` -> `buildTarget` in `serve` (options + production) and `extract-i18n`. Nothing else: no tsconfig, `test.ts`, `main.ts`, `polyfills.ts` or `src/app/**` change (the app stays on `NgModule`s, `browser` builder, webpack).
+- ng update itself bumped TypeScript to 5.4.5, zone.js to 0.14.10 and `@angular/language-service`.
+
+### What did NOT break
+
+- Nebular 12 -> 13 compiled and rendered pixel-identical on all covered pages; only the tree-grid runtime issue above.
+- TypeScript 4.9 -> 5.4 needed no source change (`useDefineForClassFields: false` from the 15 step still in place).
+- zone.js 0.14: nothing to do, deep imports were removed in 16.2.
+- `@types/google.maps@3.55.12` pin and `@babel/runtime` override still needed and still work.
+- ngx-echarts 17, ngx-leaflet 17, ngx-charts 20.5, angular2-smart-table 3.8, ng2-ckeditor 1.3.7: no API changes hit.
+- Same two CommonJS warnings as 16 (`leaflet`, `eva-icons`) and the same "1 rules skipped due to selector errors" sass notice.
+
+### Warnings
+
+- `npm ci` now prints `EBADENGINE` for the transitive `undici@7.x` (wants Node >= 20.18.1). Non-fatal on 18.20.8; Node 20 is required for the 18 step anyway.
+- `karma-cli@1.0.1` ancient-engine warning, unchanged.
+
+### Metrics
+
+| | Angular 16 | Angular 17 |
+|---|---|---|
+| Tests | 67/67 | 69/69 (+2 tree-grid / CDK_TABLE) |
+| Prod initial bundle (raw) | 3.43 MB | 3.45 MB |
+| Prod initial bundle (est. transfer) | 533.25 kB | 538.40 kB |
+| Largest lazy chunk | pages-pages-module 1.56 MB | 1.56 MB / 390.81 kB |
+| Playwright | 91/91 | 91/91 |
+
+### Visual regression (Playwright, goldens = Angular 16, `:4216`)
+
+Before the 17.3 fix: 90/91 (tree-grid navigation only; zero visual diffs). After: **91/91, zero visual diffs**, same 12 routes x 4 themes. The two tolerated console errors (`/pages/dashboard` echarts `setOption`, `/pages/editors/ckeditor` strict mode) are unchanged; no new console error on any route. `/pages/maps/gmaps` still uncovered (API key).
+
+### Known limitations
+
+- `@angular/cdk` capped at 17.2.1 until Nebular 14 (17.2).
+- `TreeGridCdkTableDirective` shim (17.3) to be removed with Nebular 14.
+- `legacy-peer-deps=true` remains (16.5 / 17.1).
+- Still on the webpack `browser` builder; the esbuild `application` builder migration is deferred (global scripts and CommonJS deps behave differently).
 
 ## 17 -> 18 (not started)
 
-- Node 18.19+ / 20.11+.
+- Node 18.19+ / 20.11+; the `undici` engine warning suggests moving to Node 20.
 - TypeScript 5.4+.
-- Nebular 14.
+- Nebular 14 -> then lift the cdk cap to 18.x and delete `TreeGridCdkTableDirective`.
+- `@asymmetrik/ngx-leaflet` -> `@bluehalo/ngx-leaflet@18.0.2` (rename happens here, not at 17).
+- angular2-smart-table 4.x peers Angular 18-21 (3.8.0 also allows 18).
 - Old polyfills (`core-js/es6/reflect`, `classlist.js`, `web-animations-js`) can be dropped from `src/polyfills.ts`.
 - RxJS 7 optional but recommended before the downstream component-library consumers upgrade.
-- Dead tooling to delete: `tslint.json`, `codelyzer`, `protractor.conf.js`, `e2e/`.
+- Dead tooling to delete: `tslint.json`, `codelyzer`, `tslint-language-service`, `protractor.conf.js`, `e2e/` (then drop `legacy-peer-deps`).
