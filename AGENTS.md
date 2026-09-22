@@ -2,6 +2,7 @@
 
 Branch `angular-14-baseline` is cut from upstream tag `v10.0.0` (Angular 14.2.x / Nebular 10 / TypeScript 4.6).
 It is the frozen "before" state for the Angular 14 -> 18 migration. Do not bump Angular, Nebular, or TypeScript on this branch.
+The shared migration history and reusable Devin procedure live one level above this worktree in `../MIGRATION_LOG.md` and `../DEVIN_ANGULAR_MIGRATION_PLAYBOOK.md`.
 
 ## Toolchain (pinned)
 
@@ -10,11 +11,14 @@ It is the frozen "before" state for the Angular 14 -> 18 migration. Do not bump 
   - A `preinstall` script hard-fails `npm install`/`npm ci` on any non-16 Node. (`engine-strict=true` cannot be used: it also audits transitive deps such as `karma-cli@1.0.1`, which declare ancient engines.)
 - npm 8.x. `.npmrc` sets `save-exact=true` and `legacy-peer-deps=true` (required: `@angular/cdk@12.1.0` peer-conflicts with Angular 14).
 - Install with `npm ci` only, never `npm install` — `package-lock.json` is the actual version pin.
+- `node_modules` is a symlink to `node_modules.nosync` so iCloud Drive (~/Documents) doesn't evict/corrupt it; `npm ci` into it works normally.
 
 ## Commands
 
 - `npm ci` — install (runs ngcc postinstall; ~1-2 min)
 - `npm start` — dev server on http://localhost:4200
+- `npm run dev:portless` — preferred dev server at https://ngx-admin-v14.localhost. The script pins Portless to Node 24.7.0 while the child Angular process uses the pinned Node 16.20.2 runtime.
+- `npm run dev` — raw dev server on http://localhost:4200 using the pinned Node runtime.
 - `npm run build` — dev build
 - `npm run test:ci` — Karma headless, single run, with coverage. Needs system Chrome; if Karma cannot find it: `export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`.
 - `npm test` — Karma watch mode (opens Chrome)

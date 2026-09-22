@@ -6,6 +6,18 @@
 
 To install ngx-admin you have to use NodeJS version 14.14+ because of [node-sass](https://github.com/sass/node-sass) version utilized in the application.
 
+## Local Angular 14 snapshot
+
+This worktree is pinned to Node 16.20.2 and its committed `package-lock.json`. Install dependencies with `npm ci` using Node 16.
+
+[Vercel Portless](https://github.com/vercel-labs/portless) runs outside the legacy app runtime. Install the pinned launcher once using Node 24.7.0 (`npm install --global portless@0.15.6`), then run:
+
+```sh
+npm run dev:portless
+```
+
+The app is available at https://ngx-admin-v14.localhost. Use `npm run dev` for the raw http://localhost:4200 server.
+
 # Material theme for ngx-admin
 
 Material admin theme is based on the most popular Angular dashboard template - [ngx-admin](https://akveo.github.io/ngx-admin?utm_campaign=ngx_admin%20-%20home%20-%20ngx_admin%20github%20readme&utm_source=ngx_admin_material&utm_medium=referral&utm_content=github_readme)
