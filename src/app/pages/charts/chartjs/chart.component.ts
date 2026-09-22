@@ -41,6 +41,7 @@ export class ChartComponent implements OnInit, OnChanges, OnDestroy {
 
   private create() {
     if (this.canvas) {
+      this.chart?.destroy();
       this.elementRef.nativeElement.removeChild(this.canvas);
     }
     this.canvas = document.createElement('canvas');

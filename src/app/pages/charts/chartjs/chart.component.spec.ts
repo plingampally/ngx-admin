@@ -75,6 +75,8 @@ describe('ChartComponent', () => {
     fixture.detectChanges();
 
     expect(FakeChart.instances.length).toBe(2);
+    expect(FakeChart.instances[0].destroy).toHaveBeenCalled();
+    expect(FakeChart.instances[1].destroy).not.toHaveBeenCalled();
     expect(fixture.nativeElement.querySelectorAll('canvas').length).toBe(1);
   });
 
