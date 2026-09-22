@@ -53,7 +53,7 @@ const components = [
   imports: [
     ThemeModule,
     ChartsRoutingModule,
-    NgxEchartsModule,
+    NgxEchartsModule.forRoot({ echarts: () => import('echarts') }),
     NgxChartsModule,
     NgxChartModule,
     NbCardModule,
