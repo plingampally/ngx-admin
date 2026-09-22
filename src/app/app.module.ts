@@ -21,20 +21,26 @@ import {
   NbWindowModule,
 } from '@nebular/theme';
 
-@NgModule({ declarations: [AppComponent],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        NbSidebarModule.forRoot(),
-        NbMenuModule.forRoot(),
-        NbDatepickerModule.forRoot(),
-        NbDialogModule.forRoot(),
-        NbWindowModule.forRoot(),
-        NbToastrModule.forRoot(),
-        NbChatModule.forRoot({
-            messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
-        }),
-        CoreModule.forRoot(),
-        ThemeModule.forRoot()], providers: [provideHttpClient(withInterceptorsFromDi())] })
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    NbSidebarModule.forRoot(),
+    NbMenuModule.forRoot(),
+    NbDatepickerModule.forRoot(),
+    NbDialogModule.forRoot(),
+    NbWindowModule.forRoot(),
+    NbToastrModule.forRoot(),
+    NbChatModule.forRoot({
+      messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
+    }),
+    CoreModule.forRoot(),
+    ThemeModule.forRoot(),
+  ],
+  providers: [provideHttpClient(withInterceptorsFromDi())],
+  bootstrap: [AppComponent],
+})
 export class AppModule {
 }
