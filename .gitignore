@@ -5,6 +5,7 @@
 
 # dependencies
 /node_modules
+/node_modules.nosync
 
 # IDEs and editors
 /.idea

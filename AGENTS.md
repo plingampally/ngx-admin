@@ -1,7 +1,7 @@
 # ngx-admin — Angular 14 -> 18 migration, step: Angular 15
 
 Branch `angular-15` (worktree `ngx-admin-v15`) is the 14 -> 15 step, branched from `angular-14-baseline` (worktree `ngx-admin`, upstream tag `v10.0.0`).
-Strategy: one worktree + branch per major version so each step can be diffed and tested independently. Per-step breakage is tracked in `MIGRATION_LOG.md` — update it whenever a step finds or fixes something.
+Strategy: one worktree + branch per major version so each step can be diffed and tested independently. Per-step breakage is tracked in the shared parent log at `../MIGRATION_LOG.md` — update it whenever a step finds or fixes something. The reusable Devin procedure is at `../DEVIN_ANGULAR_MIGRATION_PLAYBOOK.md`.
 
 ## Toolchain (pinned)
 
@@ -10,12 +10,15 @@ Strategy: one worktree + branch per major version so each step can be diffed and
   - A `preinstall` script hard-fails `npm install`/`npm ci` on any non-18 Node. (`engine-strict=true` cannot be used: it also audits transitive deps such as `karma-cli@1.0.1`, which declare ancient engines.)
 - npm 10.x. `.npmrc` sets `save-exact=true` and `legacy-peer-deps=true` (still required: `ng2-smart-table` peers on Angular ^10 and the other View Engine libs have stale peer ranges; removable once they are replaced in the 16 step).
 - Install with `npm ci` only, never `npm install` — `package-lock.json` is the actual version pin.
+- `node_modules` is a symlink to `node_modules.nosync` so iCloud Drive (~/Documents) doesn't evict/corrupt it; `npm ci` into it works normally.
 - Versions on this branch: Angular 15.2.10, CLI 15.2.11, CDK 15.2.9, Nebular 11.0.1, TypeScript 4.9.5, zone.js 0.12.0, rxjs 6.6.2.
 
 ## Commands
 
 - `npm ci` — install (~1-2 min; no postinstall — ngcc runs on demand during build)
 - `npm start -- --port 4215` — dev server (4200 is used by the 14 baseline worktree)
+- `npm run dev:portless` — preferred dev server at https://ngx-admin-v15.localhost. The explicit name in this script intentionally bypasses Portless's git-worktree prefix; bare `portless` would use `angular-15.ngx-admin-v15.localhost`. The script pins Portless to Node 24.7.0 while the child Angular process uses the pinned Node 18.20.8 runtime.
+- `npm run dev` — raw dev server on http://localhost:4215 using the pinned Node runtime.
 - `npm run build` — dev build
 - `npm run test:ci` — Karma headless, single run, with coverage. Needs system Chrome; if Karma cannot find it: `export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`.
 - `npm test` — Karma watch mode (opens Chrome)
@@ -35,7 +38,7 @@ Strategy: one worktree + branch per major version so each step can be diffed and
 
 ## Gate for every migration step
 
-`npm ci` (from empty node_modules) -> `npm run build:prod` -> `npm run test:ci` (63/63) -> `npm run lint`. Check the Karma "Executed N of N" line explicitly: the 15 step produced `Executed 0 of 0` with exit code 0 (see MIGRATION_LOG 15.1).
+`npm ci` (from empty node_modules) -> `npm run build:prod` -> `npm run test:ci` (63/63) -> `npm run lint`. Check the Karma "Executed N of N" line explicitly: the 15 step produced `Executed 0 of 0` with exit code 0 (see `../MIGRATION_LOG.md`, issue 15.1).
 
 ## Baseline test suite
 
