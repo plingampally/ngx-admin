@@ -8,7 +8,7 @@ One worktree and one branch per major version. Each step must be green (`npm ci`
 | 14 -> 15 | `angular-15` / `ngx-admin-v15` | 18.20.8 | 15.2.10 | 15.2.11 | 15.2.9 | 11.0.1 | 4.9.5 | 0.12.0 | green |
 | 15 -> 16 | `angular-16` / `ngx-admin-v16` | 18.20.8 | 16.2.12 | 16.2.16 | 16.2.14 | 12.0.0 | 4.9.5 | 0.13.3 | green |
 | 16 -> 17 | `angular-17` / `ngx-admin-v17` | 18.20.8 | 17.3.12 | 17.3.17 | 17.2.1 (cap, see 17.2) | 13.0.0 | 5.4.5 | 0.14.10 | green |
-| 17 -> 18 | `angular-18` / `ngx-admin-v18` | 20.x | 18.2.x | | 18.2.x | 14.x | 5.4-5.5 | 0.14 | not started |
+| 17 -> 18 | `angular-18` / `ngx-admin-v18` | 20.20.2 | 18.2.14 | 18.2.21 | 18.2.14 | 14.0.2 | 5.4.5 | 0.14.10 | green |
 
 Severity: **blocker** = build/test/install fails; **silent** = passes with wrong result (most dangerous); **warning** = deprecation or noise only.
 
@@ -277,13 +277,97 @@ Before the 17.3 fix: 90/91 (tree-grid navigation only; zero visual diffs). After
 - `legacy-peer-deps=true` remains (16.5 / 17.1).
 - Still on the webpack `browser` builder; the esbuild `application` builder migration is deferred (global scripts and CommonJS deps behave differently).
 
-## 17 -> 18 (not started)
+## 17 -> 18
 
-- Node 18.19+ / 20.11+; the `undici` engine warning suggests moving to Node 20.
-- TypeScript 5.4+.
-- Nebular 14 -> then lift the cdk cap to 18.x and delete `TreeGridCdkTableDirective`.
-- `@asymmetrik/ngx-leaflet` -> `@bluehalo/ngx-leaflet@18.0.2` (rename happens here, not at 17).
-- angular2-smart-table 4.x peers Angular 18-21 (3.8.0 also allows 18).
-- Old polyfills (`core-js/es6/reflect`, `classlist.js`, `web-animations-js`) can be dropped from `src/polyfills.ts`.
-- RxJS 7 optional but recommended before the downstream component-library consumers upgrade.
-- Dead tooling to delete: `tslint.json`, `codelyzer`, `tslint-language-service`, `protractor.conf.js`, `e2e/` (then drop `legacy-peer-deps`).
+Branch `angular-18`, worktree `ngx-admin-v18`, from `angular-17` @ `525345b6`. Commits: `972000d7` prep, `91771629` ng update, `483a2a86` version pins + Nebular 14 + polyfill/shim removal, `631e2bad` formatting restore after the schematic.
+
+Source baseline re-verified before starting (Node 18.20.8, npm 10.8.2, Chrome for Testing 137): `npm ci` ok, `build:prod` ok (3.45 MB / 538.40 kB), `test:ci` 69/69, `lint` 0 errors / 1 pre-existing warning, Playwright 91/91 against `:4217`. The committed goldens are unchanged from `angular-17` and pass 91/91 against the Angular 17 server on this machine, so they serve as the Angular 17 baseline (not recaptured). Logs in `<workspace-root>/logs/baseline17-*.log`, `18-*.log`.
+
+Workspace note: same layout as the 17 step (`ngx-admin` on `angular-15`, log kept in-repo). `ngx-admin-v18` was added as a direct-sibling worktree via `git worktree add -b angular-18 ../ngx-admin-v18 angular-17`; no worktree was renamed or moved.
+
+### Versions
+
+| | Angular 17 | Angular 18 |
+|---|---|---|
+| Node / npm | 18.20.8 / 10.8.2 | **20.20.2** / 10.8.2 (CLI 18 needs ^18.19.1 \|\| ^20.11.1 \|\| >=22; `.nvmrc`, `.node-version`, `engines`, `preinstall` guard, `dev` script and `Dockerfile.ci` all moved to 20) |
+| @angular/* | 17.3.12 | 18.2.14 |
+| @angular/cli, build-angular | 17.3.17 | 18.2.21 |
+| @angular/cdk, google-maps | 17.2.1 (cap) | 18.2.14 (cap lifted, see 18.2) |
+| @nebular/* | 13.0.0 | 14.0.2 |
+| TypeScript | 5.4.5 | 5.4.5 (build-angular 18 allows >=5.4 <5.6; 5.5 not needed) |
+| zone.js | 0.14.10 | 0.14.10 |
+| rxjs | 6.6.2 | 6.6.2 (Nebular 14 still peers ^6.5.3 \|\| ^7.4.0) |
+| @angular-eslint/* | 17.5.3 | 18.4.3 |
+| @typescript-eslint/* / eslint | 7.18.0 / 8.57 | 7.18.0 / 8.57 (unchanged; angular-eslint 18 peers utils ^7.11 \|\| ^8) |
+| ngx-leaflet | `@asymmetrik/ngx-leaflet` 17.0.0 | **`@bluehalo/ngx-leaflet` 18.0.2** (package rename; `LeafletModule` API identical) |
+| ngx-echarts / echarts | 17.2.0 / 5.6.0 | 18.0.0 / 5.6.0 |
+| @types/node | 18.19.130 | 20.19.43 |
+| removed | | `core-js` 2.5.1, `classlist.js`, `web-animations-js`, `intl` (dead polyfills); `tslint`, `tslint-language-service`, `codelyzer`, `protractor`, `ts-node`, `jasmine-spec-reporter`, `@types/jasminewd2` (dead tooling); `.npmrc legacy-peer-deps` |
+| unchanged | | @swimlane/ngx-charts 20.5.0, angular2-smart-table 3.8.0 (peers 16-20), ng2-ckeditor 1.3.7, chart.js 2.7.1, tinymce, leaflet |
+
+### Prep (`972000d7`, done while still on 17, kept green: build 3.45 MB / 538.40 kB, 69/69 tests, lint)
+
+- Node 20.20.2 pinned everywhere the 18 pin lived (`.nvmrc`, `.node-version`, `engines.node: 20.x`, `preinstall` guard `/^20\./`, `dev` script runtime path and port `4218`, `portless.json` name `ngx-admin-v18`, `Dockerfile.ci` `node:20.20.2-bookworm`), `@types/node` ^20.
+- Deleted the dead tslint/protractor tooling scheduled since 16.5: `tslint.json`, `protractor.conf.js`, `e2e/`, the `ngx-admin-demo-e2e` project in `angular.json`, the `tslint-language-service` plugin in `tsconfig.json`, `e2e/tsconfig.json` in `.eslintrc.json`, scripts `pree2e`/`e2e`, and the devDeps listed above.
+- Removed `legacy-peer-deps=true` from `.npmrc`; the lockfile was regenerated once (`rm package-lock.json && npm install`, then `npm ci` from empty) with **no** ERESOLVE. 2053 -> 1888 packages; every `@angular*`/`@nebular` resolution stayed identical to the 17 lock. The `undici@7` EBADENGINE warning from the 17 step disappeared with the regenerated lock; only `karma-cli@1.0.1` still warns.
+
+### Breaks
+
+| # | Break | Severity | Where | Fix |
+|---|---|---|---|---|
+| 18.1 | `ng update @angular/core@18 @angular/cli@18` refuses: `@angular-eslint/schematics@17.5.3` peers `@angular/cli >= 17.0.0 < 18.0.0` | blocker (tooling) | `logs/18-ng-update.log` | `--force` (same pattern as 16.1/17.1); angular-eslint moved to 18.4.3 in `483a2a86`. This was the only refusal — the tslint peer from 17.1 is gone because the tooling was deleted in prep. |
+| 18.2 | Regenerating the lockfile after the version pins: the first `npm install` wrote a lock missing `chokidar@4.0.3` and its transitive entries, so `npm ci` failed with `EUSAGE` (lock out of sync) | blocker (install) | `package-lock.json` | Re-ran `npm install` once, which completed the tree; `rm -rf node_modules && npm ci` then passes cleanly. Root cause is an npm 10.8.2 lock-repair quirk, not a dependency conflict; always follow `npm install` with a clean `npm ci` before committing the lock. |
+
+No Angular, Nebular, TypeScript or template compile error occurred. No `src/app/**` change was *required* by the upgrade; the ones below are schematic output or removals of shims that Nebular 14 makes obsolete.
+
+### Automatic migrations applied by `ng update`
+
+- `@angular/core` v18 `HttpClientModule` deprecation migration ("3 files modified"): `src/app/app.module.ts` `HttpClientModule` -> `providers: [provideHttpClient(withInterceptorsFromDi())]`; `src/app/@core/core.module.spec.ts` and `src/app/@theme/theme.module.spec.ts` `HttpClientTestingModule` -> `provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()`. Behaviour-preserving (`withInterceptorsFromDi` keeps the `HTTP_INTERCEPTORS` DI path). The schematic re-printed the three decorators/`TestBed` blocks on one line with 4-space indentation; `631e2bad` restores the original layout without changing content.
+- Other v18 core migrations (`afterRender` phase, invalid two-way bindings) reported "No changes made".
+- Optional `use-application-builder` (webpack `browser` -> esbuild `application`) was **not** run; the app still relies on global `scripts` (`pace-js`, `tinymce`, `chart.js`) and CommonJS deps. Deferred, see Known limitations.
+- `ng update` did not touch `angular.json`, `tsconfig*.json`, `src/test.ts`, `src/main.ts` or `src/polyfills.ts`.
+
+### Manual compatibility changes (`483a2a86`)
+
+- Nebular 13 -> 14.0.2. Verified against the 14.0.2 tarball before pinning: `NbColumnDefDirective`/row defs now declare `sticky` as an accessor (so cdk 18.2.14 compiles — closes 17.2) and `NbTreeGridComponent`'s providers include `{ provide: CDK_TABLE, useExisting: NbTreeGridComponent }` (closes 17.3). Deleted `src/app/pages/tables/tree-grid/tree-grid-cdk-table.directive.ts` and its `TablesModule` declaration; `tree-grid.component.spec.ts` now asserts that the `NbTreeGridComponent` injector resolves `CDK_TABLE` to the grid itself (regression guard replaces the old "fails without the shim" test; count stays 69).
+- `@asymmetrik/ngx-leaflet` -> `@bluehalo/ngx-leaflet` 18.0.2: import path only in `maps.module.ts` and `e-commerce.module.ts`.
+- `src/polyfills.ts`: removed `classlist.js`, `web-animations-js`, `core-js/es6/reflect`, `core-js/es7/{reflect,array,object}` (IE-era; Angular 18 supports only evergreen browsers). `import 'zone.js'` and the `SVGElement.prototype.contains` shim remain. `intl` was an unreferenced dependency.
+
+### What did NOT break
+
+- Nebular 13 -> 14 compiled clean and rendered pixel-identical on all 12 covered routes x 4 themes.
+- TypeScript 5.4.5, zone.js 0.14.10, rxjs 6.6.2 needed no change.
+- ngx-echarts 18, ngx-charts 20.5, angular2-smart-table 3.8, ng2-ckeditor 1.3.7: no API changes hit. `find node_modules -name '*.metadata.json'` is empty (no View Engine leftovers).
+- `@types/google.maps@3.55.12` pin and `@babel/runtime` override still needed and still work.
+- Same two CommonJS warnings as 17 (`leaflet` via `@bluehalo/ngx-leaflet`, `eva-icons`) and the same "1 rules skipped due to selector errors" sass notice.
+- Removing the polyfills changed nothing visible (Chromium has native `classList`/Web Animations/`Reflect`).
+
+### Metrics
+
+| | Angular 17 | Angular 18 |
+|---|---|---|
+| Tests | 69/69 | 69/69 |
+| Prod initial bundle (raw) | 3.45 MB | 3.55 MB |
+| Prod initial bundle (est. transfer) | 538.40 kB | 530.37 kB |
+| Largest lazy chunk (pages-pages-module) | 1.56 MB / 390.81 kB | 1.64 MB / 400.33 kB |
+| Playwright | 91/91 | 91/91 |
+| npm packages (`npm ci`) | 2053 | 1888 |
+
+### Visual regression (Playwright, goldens = Angular 17, `:4217`)
+
+**91/91, zero visual diffs** against `:4218` (41 navigation, 4 smoke, 1 theme-cycle, 45 visual). The two tolerated console errors (`/pages/dashboard` echarts `setOption`, `/pages/editors/ckeditor` strict mode) are unchanged and no new console error appeared on any route. `/pages/maps/gmaps` still uncovered (API key).
+
+### Known limitations
+
+- Still on the webpack `browser` builder; the optional `use-application-builder` migration is deferred (global scripts / CommonJS deps need re-validation under esbuild).
+- rxjs 6.6.2 still; Nebular 14 and Angular 18 accept it, but Angular 19+/Nebular 15 will want rxjs 7.
+- `angular2-smart-table` 3.8.0 kept (4.x peers 18-21 and is available for the 19 step).
+- `/pages/maps/gmaps` unverified (no API key). `Dockerfile.ci` was updated to Node 20 but not built in this environment (no Docker).
+
+## 18 -> 19 (not started)
+
+- Angular 19 needs TypeScript >=5.5 <5.7 and Node ^18.19.1 || ^20.11.1 || >=22; Node 20.20.2 stays valid.
+- Nebular 15 for Angular 19; check the release still peers rxjs 6 or move to rxjs 7 first (prep step).
+- `@bluehalo/ngx-leaflet` 19.x, ngx-echarts 19.x, @angular-eslint 19.x (eslint 9 flat config becomes the default — plan the `.eslintrc.json` -> `eslint.config.js` move).
+- v19 defaults `standalone: true` for components; the migration adds `standalone: false` to every NgModule-declared component — expect a large mechanical diff.
+- Consider the esbuild `application` builder before 20 (`browser` builder deprecation).
