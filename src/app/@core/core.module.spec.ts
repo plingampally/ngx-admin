@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { NB_DOCUMENT } from '@nebular/theme';
@@ -7,6 +7,7 @@ import { NbRoleProvider } from '@nebular/security';
 import { NbAccessChecker } from '@nebular/security';
 
 import { CoreModule, NB_CORE_PROVIDERS, NbSimpleRoleProvider } from './core.module';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CoreModule', () => {
   it('NbSimpleRoleProvider should emit guest role', (done) => {
@@ -33,12 +34,14 @@ describe('NB_CORE_PROVIDERS', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      providers: [
+    imports: [RouterTestingModule],
+    providers: [
         ...NB_CORE_PROVIDERS,
         { provide: NB_DOCUMENT, useValue: document },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     accessChecker = TestBed.inject(NbAccessChecker);
   });
 
