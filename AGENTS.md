@@ -1,7 +1,7 @@
 # ngx-admin — Angular 14 -> 18 migration, step: Angular 16
 
 Branch `angular-16` (worktree `ngx-admin-v16`) is the 15 -> 16 step, branched from `angular-15` (worktree `ngx-admin-v15`); the chain starts at `angular-14-baseline` (worktree `ngx-admin`, upstream tag `v10.0.0`).
-Strategy: one worktree + branch per major version so each step can be diffed and tested independently. Per-step breakage is tracked in `MIGRATION_LOG.md` — update it whenever a step finds or fixes something.
+Strategy: one worktree + branch per major version so each step can be diffed and tested independently. Per-step breakage is tracked in `MIGRATION_LOG.md` (kept in sync with the shared parent log at `../MIGRATION_LOG.md`) — update it whenever a step finds or fixes something. The reusable Devin procedure is at `../DEVIN_ANGULAR_MIGRATION_PLAYBOOK.md`.
 
 ## Toolchain (pinned)
 
@@ -10,6 +10,7 @@ Strategy: one worktree + branch per major version so each step can be diffed and
   - A `preinstall` script hard-fails `npm install`/`npm ci` on any non-18 Node. (`engine-strict=true` cannot be used: it also audits transitive deps such as `karma-cli@1.0.1`, which declare ancient engines.)
 - npm 10.x. `.npmrc` sets `save-exact=true` and `legacy-peer-deps=true` (still required only for the dead `tslint-language-service` peer on `tslint <6`; removable when the tslint tooling is deleted in the 18 step — see MIGRATION_LOG 16.5).
 - Install with `npm ci` only, never `npm install` — `package-lock.json` is the actual version pin.
+- `node_modules` may be a symlink to `node_modules.nosync` so iCloud Drive (~/Documents) doesn't evict/corrupt it; `npm ci` into it works normally.
 - Versions on this branch: Angular 16.2.12, CLI 16.2.16, CDK 16.2.14, Nebular 12.0.0, TypeScript 4.9.5, zone.js 0.13.3, rxjs 6.6.2.
 - ngcc is gone in Angular 16: every Angular library must ship Ivy. `ng2-smart-table` -> `angular2-smart-table` (Nebular's smart-table theme is re-applied to the new selectors in `src/app/@theme/styles/_smart-table.theme.scss`), `angular2-chartjs` -> in-repo `NgxChartModule` (`<ngx-chart>`), echarts 5 is imported as a module (`NgxEchartsModule.forRoot({ echarts: () => import('echarts') })`), no global echarts script.
 
@@ -17,6 +18,8 @@ Strategy: one worktree + branch per major version so each step can be diffed and
 
 - `npm ci` — install (~1-2 min; no postinstall)
 - `npm start -- --port 4216` — dev server (4200 = 14 baseline, 4215 = 15 worktree)
+- `npm run dev:portless` — preferred dev server at https://ngx-admin-v16.localhost. The explicit name in this script intentionally bypasses Portless's git-worktree prefix; bare `portless` would use `angular-16.ngx-admin-v16.localhost`. The script pins Portless to Node 24.7.0 while the child Angular process uses the pinned Node 18.20.8 runtime.
+- `npm run dev` — raw dev server on http://localhost:4216 using the pinned Node runtime.
 - `npm run build` — dev build
 - `npm run test:ci` — Karma headless, single run, with coverage. Needs system Chrome; if Karma cannot find it: `export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`.
 - `npm test` — Karma watch mode (opens Chrome)
@@ -36,7 +39,7 @@ Strategy: one worktree + branch per major version so each step can be diffed and
 
 ## Gate for every migration step
 
-`npm ci` (from empty node_modules) -> `npm run build:prod` -> `npm run test:ci` (67/67) -> `npm run lint` -> Playwright 91/91 against `:4216`. Check the Karma "Executed N of N" line explicitly: the 15 step produced `Executed 0 of 0` with exit code 0 (see MIGRATION_LOG 15.1).
+`npm ci` (from empty node_modules) -> `npm run build:prod` -> `npm run test:ci` (67/67) -> `npm run lint` -> Playwright 91/91 against `:4216`. Check the Karma "Executed N of N" line explicitly: the 15 step produced `Executed 0 of 0` with exit code 0 (see `MIGRATION_LOG.md`, issue 15.1).
 
 ## Baseline test suite
 
