@@ -51,9 +51,9 @@
               "node_modules/chart.js/dist/Chart.min.js"
             ],
             "allowedCommonJsDependencies": [
-              "angular2-chartjs",
               "echarts",
               "lodash",
+              "rfdc",
               "zrender/lib/svg/svg",
               "zrender/lib/vml/vml"
             ],
