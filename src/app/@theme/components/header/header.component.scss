@@ -10,7 +10,9 @@
   .logo-container {
     display: flex;
     align-items: center;
-    width: calc(#{nb-theme(sidebar-width)} - #{nb-theme(header-padding)});
+    min-width: calc(#{nb-theme(sidebar-width)} - #{nb-theme(header-padding)});
+    @include nb-ltr(margin-right, 0.5rem);
+    @include nb-rtl(margin-left, 0.5rem);
   }
 
   nb-action {
@@ -43,12 +45,23 @@
     }
 
     .logo {
-      padding: 0 1.25rem;
-      font-size: 1.75rem;
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
       @include nb-ltr(border-left, 1px solid nb-theme(divider-color));
       @include nb-rtl(border-right, 1px solid nb-theme(divider-color));
       white-space: nowrap;
       text-decoration: none;
+      color: nb-theme(text-basic-color);
+
+      .logo-mark {
+        height: 1.5rem;
+        @include nb-ltr(margin-right, 0.625rem);
+        @include nb-rtl(margin-left, 0.625rem);
+      }
     }
   }
 
