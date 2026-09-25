@@ -7,9 +7,9 @@ test('root redirects to /pages/dashboard', async ({ page }) => {
   await expect(page).toHaveURL(/\/pages\/dashboard/);
 });
 
-test('header shows ngx-admin logo', async ({ page }) => {
+test('header shows Bank of America logo', async ({ page }) => {
   await gotoAndSettle(page, '/pages/dashboard');
-  await expect(page.locator('.logo')).toHaveText(/ngx-admin/);
+  await expect(page.locator('.logo')).toHaveText(/Bank of America/);
 });
 
 test('sidebar nb-menu has more than 5 items', async ({ page }) => {

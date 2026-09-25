@@ -22,8 +22,9 @@ describe('FooterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render Akveo attribution', () => {
+  it('should render the Bank of America demo attribution', () => {
     const text: string = fixture.nativeElement.textContent;
-    expect(text).toContain('Akveo');
+    expect(text).toContain('Bank of America');
+    expect(text).toContain('fictitious data');
   });
 });

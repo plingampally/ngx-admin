@@ -1,7 +1,7 @@
 <nb-card size="giant">
   <nb-tabset fullWidth>
 
-    <nb-tab tabTitle="Contacts">
+    <nb-tab tabTitle="Relationship Managers">
       <nb-list>
         <nb-list-item class="contact" *ngFor="let c of contacts">
           <nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>
@@ -10,7 +10,7 @@
       </nb-list>
     </nb-tab>
 
-    <nb-tab tabTitle="Recent">
+    <nb-tab tabTitle="Recent Escalations">
       <nb-list>
         <nb-list-item class="contact" *ngFor="let c of recent">
           <nb-user [picture]="c.user.picture" [name]="c.user.name" [title]="c.type" size="large"></nb-user>

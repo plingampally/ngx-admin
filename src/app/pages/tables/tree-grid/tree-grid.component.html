@@ -11,7 +11,7 @@
 
       <ng-container [nbTreeGridColumnDef]="customColumn">
         <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
-          {{customColumn}}
+          Loan Portfolio
         </th>
         <td nbTreeGridCell *nbTreeGridCellDef="let row">
           <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>

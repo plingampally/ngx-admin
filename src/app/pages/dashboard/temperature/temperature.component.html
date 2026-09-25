@@ -1,7 +1,7 @@
 <nb-card size="large">
   <nb-tabset fullWidth>
 
-    <nb-tab tabTitle="Temperature">
+    <nb-tab tabTitle="Prime Rate">
 
       <div class="slider-container">
         <ngx-temperature-dragger [(value)]="temperature" (power)="temperatureOff = !$event"
@@ -10,32 +10,23 @@
 
           <div class="slider-value-container"  [ngClass]="{ 'off': temperatureOff }">
             <div class="value temperature h1">
-              {{ temperatureOff ? '--' : (temperature | ngxRound) }}
+              {{ temperatureOff ? '--' : (temperature | number:'1.2-2') }}
             </div>
             <div class="desc">
-              Celsius
+              prime rate, APR
             </div>
           </div>
         </ngx-temperature-dragger>
       </div>
 
-      <nb-radio-group [(ngModel)]="temperatureMode" name="temperature-mode">
-        <nb-radio value="cool">
-          <i class="nb-snowy-circled"></i>
-        </nb-radio>
-        <nb-radio value="warm">
-          <i class="nb-sunny-circled"></i>
-        </nb-radio>
-        <nb-radio value="heat">
-          <i class="nb-flame-circled"></i>
-        </nb-radio>
-        <nb-radio value="fan">
-          <i class="nb-loop-circled"></i>
-        </nb-radio>
+      <nb-radio-group [(ngModel)]="temperatureMode" name="rate-scenario" class="scenario-group">
+        <nb-radio value="base">Base</nb-radio>
+        <nb-radio value="hike">+25 bps</nb-radio>
+        <nb-radio value="cut">-25 bps</nb-radio>
       </nb-radio-group>
     </nb-tab>
 
-    <nb-tab tabTitle="Humidity">
+    <nb-tab tabTitle="Liquidity Coverage">
 
       <div class="slider-container">
         <ngx-temperature-dragger [(value)]="humidity" (power)="humidityOff = !$event"
@@ -46,23 +37,17 @@
             <div class="value humidity h1">
               {{ humidityOff ? '--' : (humidity | ngxRound) }}
             </div>
+            <div class="desc">
+              liquidity coverage ratio
+            </div>
           </div>
         </ngx-temperature-dragger>
       </div>
 
-      <nb-radio-group [(ngModel)]="humidityMode" name="humidity-mode">
-        <nb-radio value="cool">
-          <i class="nb-snowy-circled"></i>
-        </nb-radio>
-        <nb-radio value="warm">
-          <i class="nb-sunny-circled"></i>
-        </nb-radio>
-        <nb-radio value="heat">
-          <i class="nb-flame-circled"></i>
-        </nb-radio>
-        <nb-radio value="fan">
-          <i class="nb-loop-circled"></i>
-        </nb-radio>
+      <nb-radio-group [(ngModel)]="humidityMode" name="liquidity-scenario" class="scenario-group">
+        <nb-radio value="base">Base</nb-radio>
+        <nb-radio value="stress">Stress</nb-radio>
+        <nb-radio value="severe">Severe</nb-radio>
       </nb-radio-group>
     </nb-tab>
   </nb-tabset>

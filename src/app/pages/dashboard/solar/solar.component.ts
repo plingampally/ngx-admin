@@ -8,13 +8,13 @@ import { NbThemeService } from '@nebular/theme';
   styleUrls: ['./solar.component.scss'],
   template: `
     <nb-card size="tiny" class="solar-card">
-      <nb-card-header>Solar Energy Consumption</nb-card-header>
+      <nb-card-header>Loan-to-Deposit Ratio</nb-card-header>
       <nb-card-body>
         <div echarts [options]="option" class="echart">
         </div>
         <div class="info">
-          <div class="h4 value">6.421 kWh</div>
-          <div class="details subtitle-2"><span>out of</span> 8.421 kWh</div>
+          <div class="h4 value">$1.09T loans</div>
+          <div class="details subtitle-2"><span>against</span> $1.94T deposits</div>
         </div>
       </nb-card-body>
     </nb-card>
