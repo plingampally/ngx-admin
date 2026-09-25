@@ -61,10 +61,14 @@ export const VISUAL_ROUTES: string[] = [
   '/auth/login',
 ];
 
-export const THEMES = ['default', 'dark', 'cosmic', 'corporate'];
+export const THEMES = ['bofa', 'default', 'dark', 'cosmic', 'corporate'];
+
+// Theme the app boots with (ThemeModule.forRoot default).
+export const INITIAL_THEME = 'bofa';
 
 // Header nb-select option labels keyed by theme value.
 export const THEME_LABELS: Record<string, string> = {
+  bofa: 'Bank of America',
   default: 'Light',
   dark: 'Dark',
   cosmic: 'Cosmic',
