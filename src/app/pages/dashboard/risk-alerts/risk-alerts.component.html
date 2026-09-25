@@ -1,0 +1,29 @@
+<nb-card size="giant">
+  <nb-card-header>
+    <div class="header-title">
+      <span>Fraud &amp; Risk Alerts</span>
+      <span class="escalated">{{ openCount }} escalated</span>
+    </div>
+    <nb-select [(selected)]="filter" size="small">
+      <nb-option *ngFor="let f of filters" [value]="f">{{ f }}</nb-option>
+    </nb-select>
+  </nb-card-header>
+
+  <nb-list>
+    <nb-list-item class="alert" *ngFor="let alert of visibleAlerts">
+      <div class="severity" [ngClass]="'severity-' + statusFor(alert.severity)">
+        {{ alert.severity }}
+      </div>
+      <div class="details">
+        <div class="subtitle">
+          <span class="alert-id">{{ alert.id }}</span> &middot; {{ alert.category }} &middot; {{ alert.region }}
+        </div>
+        <div class="description caption">{{ alert.description }}</div>
+      </div>
+      <div class="meta">
+        <div class="amount">{{ alert.amount | currency:'USD':'symbol':'1.0-0' }}</div>
+        <div class="caption">{{ alert.minutesAgo }} min ago</div>
+      </div>
+    </nb-list-item>
+  </nb-list>
+</nb-card>

@@ -25,6 +25,7 @@ import { TrafficBarData } from './data/traffic-bar';
 import { ProfitBarAnimationChartData } from './data/profit-bar-animation-chart';
 import { TemperatureHumidityData } from './data/temperature-humidity';
 import { SolarData } from './data/solar';
+import { BankingOpsData } from './data/banking-ops';
 import { TrafficChartData } from './data/traffic-chart';
 import { StatsBarData } from './data/stats-bar';
 import { CountryOrderData } from './data/country-order';
@@ -45,6 +46,7 @@ import { TrafficBarService } from './mock/traffic-bar.service';
 import { ProfitBarAnimationChartService } from './mock/profit-bar-animation-chart.service';
 import { TemperatureHumidityService } from './mock/temperature-humidity.service';
 import { SolarService } from './mock/solar.service';
+import { BankingOpsService } from './mock/banking-ops.service';
 import { TrafficChartService } from './mock/traffic-chart.service';
 import { StatsBarService } from './mock/stats-bar.service';
 import { CountryOrderService } from './mock/country-order.service';
@@ -85,6 +87,7 @@ const DATA_SERVICES = [
   { provide: ProfitBarAnimationChartData, useClass: ProfitBarAnimationChartService },
   { provide: TemperatureHumidityData, useClass: TemperatureHumidityService },
   { provide: SolarData, useClass: SolarService },
+  { provide: BankingOpsData, useClass: BankingOpsService },
   { provide: TrafficChartData, useClass: TrafficChartService },
   { provide: StatsBarData, useClass: StatsBarService },
   { provide: CountryOrderData, useClass: CountryOrderService },

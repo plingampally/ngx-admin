@@ -16,12 +16,12 @@ export class TemperatureComponent implements OnDestroy {
   temperatureData: Temperature;
   temperature: number;
   temperatureOff = false;
-  temperatureMode = 'cool';
+  temperatureMode = 'base';
 
   humidityData: Temperature;
   humidity: number;
   humidityOff = false;
-  humidityMode = 'heat';
+  humidityMode = 'base';
 
   theme: any;
   themeSubscription: any;

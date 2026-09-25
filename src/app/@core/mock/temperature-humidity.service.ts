@@ -6,15 +6,15 @@ import { TemperatureHumidityData, Temperature } from '../data/temperature-humidi
 export class TemperatureHumidityService extends TemperatureHumidityData {
 
   private temperatureDate: Temperature = {
-    value: 24,
-    min: 12,
-    max: 30,
+    value: 7.5,
+    min: 3,
+    max: 12,
   };
 
   private humidityDate: Temperature = {
-    value: 87,
-    min: 0,
-    max: 100,
+    value: 118,
+    min: 100,
+    max: 150,
   };
 
   getTemperatureData(): Observable<Temperature> {
