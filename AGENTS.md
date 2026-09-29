@@ -38,12 +38,13 @@ Strategy: one worktree + branch per major version so each step can be diffed and
   - `npm run e2e:pw:update` — regenerate snapshots (`--update-snapshots`)
   - `npm run e2e:pw:report` — open the HTML report
 - **Golden policy:** snapshots in `playwright/tests/__snapshots__/` are captured from the *previous* Angular version's server (`:4217` for the 18 step; the committed files are unchanged since the 15 recapture because 16 and 17 render byte-identical to them, verified 91/91 against `:4217` before this step) and committed. Never regenerate them from the server under test — the diff between goldens and the current version IS the migration evidence.
+  - **Exception — Bank of America rebrand:** the demo-content rebrand (BofA theme + banking data, an intentional product change on top of `angular-18`) invalidates the Angular 17 goldens. Its snapshots were recaptured from `:4218` once, after the rebrand was reviewed page by page; from then on they are the baseline for this branch. The pre-rebrand migration goldens live unchanged on `angular-17`/`angular-18`.
 - First run needs `npx playwright install chromium`.
-- 91 tests: 41 navigation, 4 smoke, 1 theme-cycle, 45 visual. Two routes carry tolerated known console errors (`/pages/dashboard` echarts `setOption`, `/pages/editors/ckeditor` CKEditor strict-mode) — pre-existing upstream bugs verified identical on Angular 14, 15, 16, 17 and 18; the routes still run and any *new* console error fails the test.
+- 102 tests: 41 navigation, 4 smoke, 1 theme-cycle, 56 visual (11 routes x 5 themes incl. `bofa`, + `/auth/login` in the boot theme `bofa`). Before the rebrand: 91 (45 visual, 4 themes). Two routes carry tolerated known console errors (`/pages/dashboard` echarts `setOption`, `/pages/editors/ckeditor` CKEditor strict-mode) — pre-existing upstream bugs verified identical on Angular 14, 15, 16, 17 and 18; the routes still run and any *new* console error fails the test.
 
 ## Gate for every migration step
 
-`npm ci` (from empty node_modules) -> `npm run build:prod` -> `npm run test:ci` (69/69) -> `npm run lint` -> Playwright 91/91 against `:4218`. Check the Karma "Executed N of N" line explicitly: the 15 step produced `Executed 0 of 0` with exit code 0 (see `MIGRATION_LOG.md`, issue 15.1).
+`npm ci` (from empty node_modules) -> `npm run build:prod` -> `npm run test:ci` (70/70 after the rebrand; 69/69 on the plain migration branch) -> `npm run lint` -> Playwright 102/102 against `:4218`. Check the Karma "Executed N of N" line explicitly: the 15 step produced `Executed 0 of 0` with exit code 0 (see `MIGRATION_LOG.md`, issue 15.1).
 
 ## Baseline test suite
 

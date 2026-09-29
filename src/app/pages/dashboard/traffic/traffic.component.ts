@@ -10,7 +10,7 @@ import { TrafficChartData } from '../../../@core/data/traffic-chart';
   template: `
     <nb-card size="tiny">
       <nb-card-header>
-        <span>Traffic Consumption</span>
+        <span>Wire Volume</span>
 
         <nb-select [(selected)]="type">
           <nb-option *ngFor="let t of types" [value]="t">{{ t }}</nb-option>

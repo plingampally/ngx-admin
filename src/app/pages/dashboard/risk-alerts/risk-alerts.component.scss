@@ -1,0 +1,91 @@
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  nb-card {
+    overflow: hidden;
+  }
+
+  nb-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: nb-theme(card-header-with-select-padding-top);
+    padding-bottom: nb-theme(card-header-with-select-padding-bottom);
+  }
+
+  .header-title {
+    display: flex;
+    align-items: center;
+
+    .escalated {
+      margin-left: 0.75rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: nb-theme(badge-border-radius);
+      font-size: 0.6875rem;
+      font-weight: nb-theme(badge-text-font-weight);
+      text-transform: uppercase;
+      color: nb-theme(text-control-color);
+      background-color: nb-theme(color-danger-default);
+    }
+  }
+
+  nb-list {
+    overflow-y: auto;
+  }
+
+  .alert {
+    display: flex;
+    align-items: center;
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+  .severity {
+    flex: 0 0 5.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: nb-theme(badge-border-radius);
+    font-size: 0.6875rem;
+    font-weight: nb-theme(badge-text-font-weight);
+    line-height: 1.25rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: nb-theme(text-control-color);
+
+    @each $status in nb-get-statuses() {
+      &.severity-#{$status} {
+        background-color: nb-theme(color-#{$status}-default);
+      }
+    }
+    &.severity-basic {
+      background-color: nb-theme(color-basic-500);
+    }
+  }
+
+  .details {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0 1rem;
+
+    .description {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .alert-id {
+    font-family: nb-theme(font-family-secondary);
+    color: nb-theme(text-hint-color);
+  }
+
+  .meta {
+    flex: 0 0 auto;
+    text-align: right;
+
+    .amount {
+      font-weight: nb-theme(text-subtitle-font-weight);
+    }
+  }
+}

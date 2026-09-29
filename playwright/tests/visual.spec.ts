@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { gotoAndSettle, switchTheme } from '../helpers';
-import { THEMES, VISUAL_ROUTES } from '../routes';
+import { INITIAL_THEME, THEMES, VISUAL_ROUTES } from '../routes';
 
 function slug(route: string): string {
   return route.replace(/^\//, '').replace(/\//g, '-');
@@ -18,13 +18,13 @@ const EXTRA_MASKS: Record<string, string> = {
 for (const route of VISUAL_ROUTES) {
   const isAuth = route.startsWith('/auth/');
   for (const theme of THEMES) {
-    // Auth pages render no header theme select; capture them in default only.
-    if (isAuth && theme !== 'default') {
+    // Auth pages render no header theme select; capture them in the boot theme only.
+    if (isAuth && theme !== INITIAL_THEME) {
       continue;
     }
     test(`visual ${route} [${theme}]`, async ({ page }) => {
       await gotoAndSettle(page, route);
-      if (!isAuth && theme !== 'default') {
+      if (!isAuth && theme !== INITIAL_THEME) {
         await switchTheme(page, theme);
         await page.waitForTimeout(300);
       }

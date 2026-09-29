@@ -19,34 +19,34 @@ export class DashboardComponent implements OnDestroy {
   private alive = true;
 
   solarValue: number;
-  lightCard: CardSettings = {
-    title: 'Light',
-    iconClass: 'nb-lightbulb',
+  onlineBankingCard: CardSettings = {
+    title: 'Online Banking',
+    iconClass: 'nb-locked',
     type: 'primary',
   };
-  rollerShadesCard: CardSettings = {
-    title: 'Roller Shades',
-    iconClass: 'nb-roller-shades',
+  cardNetworkCard: CardSettings = {
+    title: 'Card Network',
+    iconClass: 'nb-e-commerce',
     type: 'success',
   };
-  wirelessAudioCard: CardSettings = {
-    title: 'Wireless Audio',
-    iconClass: 'nb-audio',
+  wireTransfersCard: CardSettings = {
+    title: 'Wire Transfers',
+    iconClass: 'nb-paper-plane',
     type: 'info',
   };
-  coffeeMakerCard: CardSettings = {
-    title: 'Coffee Maker',
-    iconClass: 'nb-coffee-maker',
+  atmNetworkCard: CardSettings = {
+    title: 'ATM Network',
+    iconClass: 'nb-keypad',
     type: 'warning',
   };
 
-  statusCards: string;
+  statusCards: CardSettings[];
 
   commonStatusCardsSet: CardSettings[] = [
-    this.lightCard,
-    this.rollerShadesCard,
-    this.wirelessAudioCard,
-    this.coffeeMakerCard,
+    this.onlineBankingCard,
+    this.cardNetworkCard,
+    this.wireTransfersCard,
+    this.atmNetworkCard,
   ];
 
   statusCardsByThemes: {
@@ -54,28 +54,47 @@ export class DashboardComponent implements OnDestroy {
     cosmic: CardSettings[];
     corporate: CardSettings[];
     dark: CardSettings[];
+    bofa: CardSettings[];
   } = {
     default: this.commonStatusCardsSet,
     cosmic: this.commonStatusCardsSet,
     corporate: [
       {
-        ...this.lightCard,
+        ...this.onlineBankingCard,
         type: 'warning',
       },
       {
-        ...this.rollerShadesCard,
+        ...this.cardNetworkCard,
         type: 'primary',
       },
       {
-        ...this.wirelessAudioCard,
+        ...this.wireTransfersCard,
         type: 'danger',
       },
       {
-        ...this.coffeeMakerCard,
+        ...this.atmNetworkCard,
         type: 'info',
       },
     ],
     dark: this.commonStatusCardsSet,
+    bofa: [
+      {
+        ...this.onlineBankingCard,
+        type: 'primary',
+      },
+      {
+        ...this.cardNetworkCard,
+        type: 'danger',
+      },
+      {
+        ...this.wireTransfersCard,
+        type: 'info',
+      },
+      {
+        ...this.atmNetworkCard,
+        type: 'success',
+      },
+    ],
   };
 
   constructor(private themeService: NbThemeService,
@@ -83,7 +102,7 @@ export class DashboardComponent implements OnDestroy {
     this.themeService.getJsTheme()
       .pipe(takeWhile(() => this.alive))
       .subscribe(theme => {
-        this.statusCards = this.statusCardsByThemes[theme.name];
+        this.statusCards = this.statusCardsByThemes[theme.name] || this.commonStatusCardsSet;
     });
 
     this.solarService.getSolarData()

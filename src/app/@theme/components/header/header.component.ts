@@ -19,6 +19,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   themes = [
     {
+      value: 'bofa',
+      name: 'Bank of America',
+    },
+    {
       value: 'default',
       name: 'Light',
     },
@@ -36,7 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     },
   ];
 
-  currentTheme = 'default';
+  currentTheme = 'bofa';
 
   userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
 

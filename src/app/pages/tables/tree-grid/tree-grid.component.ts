@@ -7,11 +7,11 @@ interface TreeNode<T> {
   expanded?: boolean;
 }
 
-interface FSEntry {
-  name: string;
-  size: string;
+interface PortfolioEntry {
+  portfolio: string;
+  balance: string;
   kind: string;
-  items?: number;
+  accounts?: number;
 }
 
 @Component({
@@ -20,16 +20,16 @@ interface FSEntry {
   styleUrls: ['./tree-grid.component.scss'],
 })
 export class TreeGridComponent {
-  customColumn = 'name';
-  defaultColumns = [ 'size', 'kind', 'items' ];
+  customColumn = 'portfolio';
+  defaultColumns = [ 'balance', 'kind', 'accounts' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
-  dataSource: NbTreeGridDataSource<FSEntry>;
+  dataSource: NbTreeGridDataSource<PortfolioEntry>;
 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<PortfolioEntry>) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
@@ -45,28 +45,29 @@ export class TreeGridComponent {
     return NbSortDirection.NONE;
   }
 
-  private data: TreeNode<FSEntry>[] = [
+  private data: TreeNode<PortfolioEntry>[] = [
     {
-      data: { name: 'Projects', size: '1.8 MB', items: 5, kind: 'dir' },
+      data: { portfolio: 'Consumer Lending', balance: '$412.6B', accounts: 4, kind: 'segment' },
       children: [
-        { data: { name: 'project-1.doc', kind: 'doc', size: '240 KB' } },
-        { data: { name: 'project-2.doc', kind: 'doc', size: '290 KB' } },
-        { data: { name: 'project-3', kind: 'txt', size: '466 KB' } },
-        { data: { name: 'project-4.docx', kind: 'docx', size: '900 KB' } },
+        { data: { portfolio: 'Residential mortgage', kind: 'secured', balance: '$228.4B' } },
+        { data: { portfolio: 'Home equity', kind: 'secured', balance: '$25.1B' } },
+        { data: { portfolio: 'Credit card', kind: 'revolving', balance: '$101.3B' } },
+        { data: { portfolio: 'Auto & other consumer', kind: 'secured', balance: '$57.8B' } },
       ],
     },
     {
-      data: { name: 'Reports', kind: 'dir', size: '400 KB', items: 2 },
+      data: { portfolio: 'Commercial Lending', kind: 'segment', balance: '$596.9B', accounts: 3 },
       children: [
-        { data: { name: 'Report 1', kind: 'doc', size: '100 KB' } },
-        { data: { name: 'Report 2', kind: 'doc', size: '300 KB' } },
+        { data: { portfolio: 'U.S. commercial', kind: 'term', balance: '$372.2B' } },
+        { data: { portfolio: 'Non-U.S. commercial', kind: 'term', balance: '$128.5B' } },
+        { data: { portfolio: 'Commercial real estate', kind: 'secured', balance: '$96.2B' } },
       ],
     },
     {
-      data: { name: 'Other', kind: 'dir', size: '109 MB', items: 2 },
+      data: { portfolio: 'Small Business', kind: 'segment', balance: '$44.7B', accounts: 2 },
       children: [
-        { data: { name: 'backup.bkp', kind: 'bkp', size: '107 MB' } },
-        { data: { name: 'secret-note.txt', kind: 'txt', size: '2 MB' } },
+        { data: { portfolio: 'Business lines of credit', kind: 'revolving', balance: '$27.9B' } },
+        { data: { portfolio: 'Equipment finance', kind: 'term', balance: '$16.8B' } },
       ],
     },
   ];
@@ -93,6 +94,6 @@ export class FsIconComponent {
   @Input() expanded: boolean;
 
   isDir(): boolean {
-    return this.kind === 'dir';
+    return this.kind === 'segment';
   }
 }

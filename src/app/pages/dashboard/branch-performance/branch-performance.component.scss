@@ -1,0 +1,58 @@
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  nb-card-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  nb-card-body {
+    overflow: auto;
+    padding-top: 0;
+  }
+
+  .branch-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 0.75rem 1rem;
+      white-space: nowrap;
+      border-bottom: 1px solid nb-theme(divider-color);
+    }
+
+    th {
+      font-size: nb-theme(text-caption-font-size);
+      font-weight: nb-theme(text-subtitle-font-weight);
+      text-transform: uppercase;
+      color: nb-theme(text-hint-color);
+      text-align: left;
+    }
+
+    .numeric {
+      text-align: right;
+      font-family: nb-theme(font-family-secondary);
+    }
+
+    nb-progress-bar {
+      min-width: 6rem;
+    }
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 0.625rem;
+    height: 0.625rem;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+
+    @each $status in nb-get-statuses() {
+      &.status-#{$status} {
+        background-color: nb-theme(color-#{$status}-default);
+      }
+    }
+  }
+}

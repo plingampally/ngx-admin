@@ -16,9 +16,9 @@ export class UserService extends UserData {
     kate: { name: 'Kate Martinez', picture: 'assets/images/kate.png' },
   };
   private types = {
-    mobile: 'mobile',
-    home: 'home',
-    work: 'work',
+    mobile: 'Private Bank',
+    home: 'Commercial Lending',
+    work: 'Wealth Management',
   };
   private contacts: Contacts[] = [
     { user: this.users.nick, type: this.types.mobile },

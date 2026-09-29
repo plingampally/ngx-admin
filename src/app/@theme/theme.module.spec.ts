@@ -29,9 +29,17 @@ describe('ThemeModule', () => {
       themeService = TestBed.inject(NbThemeService);
     });
 
-    it('should resolve NbThemeService with default theme', () => {
+    it('should resolve NbThemeService with the Bank of America theme active', () => {
       expect(themeService).toBeTruthy();
-      expect(themeService.currentTheme).toBe('default');
+      expect(themeService.currentTheme).toBe('bofa');
+    });
+
+    it('bofa JS theme exposes the brand palette as primary/danger', () => {
+      themeService.changeTheme('bofa');
+      themeService.getJsTheme().subscribe(theme => {
+        expect(theme.variables.primary).toBe('#012169');
+        expect(theme.variables.danger).toBe('#e31837');
+      });
     });
 
     it('changeTheme should switch to cosmic', () => {

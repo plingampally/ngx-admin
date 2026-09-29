@@ -45,7 +45,7 @@ export class ECommerceChartsPanelComponent implements OnDestroy {
   }
 
   changeTab(selectedTab) {
-    if (selectedTab.tabTitle === 'Profit') {
+    if (selectedTab.tabTitle === 'Net Income') {
       this.profitChart.resizeChart();
     } else {
       this.ordersChart.resizeChart();

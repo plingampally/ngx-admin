@@ -16,12 +16,14 @@ export class TemperatureComponent implements OnDestroy {
   temperatureData: Temperature;
   temperature: number;
   temperatureOff = false;
-  temperatureMode = 'cool';
+  temperatureMode = 'base';
+  readonly rateScenarios: Record<string, number> = { base: 0, hike: 0.25, cut: -0.25 };
 
   humidityData: Temperature;
   humidity: number;
   humidityOff = false;
-  humidityMode = 'heat';
+  humidityMode = 'base';
+  readonly liquidityScenarios: Record<string, number> = { base: 0, stress: -9, severe: -16 };
 
   theme: any;
   themeSubscription: any;
@@ -45,6 +47,16 @@ export class TemperatureComponent implements OnDestroy {
         this.humidityData = humidityData;
         this.humidity = this.humidityData.value;
       });
+  }
+
+  applyRateScenario(mode: string) {
+    this.temperatureMode = mode;
+    this.temperature = this.temperatureData.value + this.rateScenarios[mode];
+  }
+
+  applyLiquidityScenario(mode: string) {
+    this.humidityMode = mode;
+    this.humidity = this.humidityData.value + this.liquidityScenarios[mode];
   }
 
   ngOnDestroy() {

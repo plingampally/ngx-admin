@@ -30,25 +30,29 @@ export class SmartTableComponent {
         title: 'ID',
         type: 'number',
       },
-      firstName: {
-        title: 'First Name',
+      customer: {
+        title: 'Customer',
         type: 'string',
       },
-      lastName: {
-        title: 'Last Name',
+      accountType: {
+        title: 'Product',
         type: 'string',
       },
-      username: {
-        title: 'Username',
+      accountNumber: {
+        title: 'Account',
         type: 'string',
       },
-      email: {
-        title: 'E-mail',
+      branch: {
+        title: 'Home Branch',
         type: 'string',
       },
-      age: {
-        title: 'Age',
+      balance: {
+        title: 'Balance, $',
         type: 'number',
+      },
+      status: {
+        title: 'Status',
+        type: 'string',
       },
     },
   };

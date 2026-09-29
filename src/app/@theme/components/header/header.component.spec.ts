@@ -96,13 +96,14 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have 4 themes', () => {
-    expect(component.themes.length).toBe(4);
+  it('should have 5 themes with Bank of America first', () => {
+    expect(component.themes.length).toBe(5);
     expect(component.themes.map(theme => theme.value))
-      .toEqual(['default', 'dark', 'cosmic', 'corporate']);
+      .toEqual(['bofa', 'default', 'dark', 'cosmic', 'corporate']);
+    expect(component.themes[0].name).toBe('Bank of America');
   });
 
-  it('should initialise currentTheme to default', () => {
+  it('should initialise currentTheme from NbThemeService (test module boots "default")', () => {
     expect(component.currentTheme).toBe('default');
   });
 

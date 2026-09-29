@@ -1,0 +1,39 @@
+<nb-card size="medium">
+  <nb-card-header>
+    <span>Branch Performance</span>
+    <span class="totals caption">
+      ${{ totalDeposits / 1000 | number:'1.1-1' }}B deposits &middot; {{ totalNewAccounts | number }} new accounts this month
+    </span>
+  </nb-card-header>
+  <nb-card-body>
+    <table class="branch-table">
+      <thead>
+        <tr>
+          <th>Branch</th>
+          <th>Region</th>
+          <th class="numeric">Deposits, $M</th>
+          <th class="numeric">New accounts</th>
+          <th class="numeric">Loan originations, $M</th>
+          <th class="numeric">NPS</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of branches">
+          <td>{{ b.branch }}</td>
+          <td>{{ b.region }}</td>
+          <td class="numeric">{{ b.deposits | number:'1.1-1' }}</td>
+          <td class="numeric">{{ b.newAccounts | number }}</td>
+          <td class="numeric">{{ b.loanOriginations | number:'1.1-1' }}</td>
+          <td class="numeric">
+            <nb-progress-bar [value]="b.nps" [status]="b.nps >= 70 ? 'success' : b.nps >= 60 ? 'primary' : 'warning'"
+                             size="tiny" [displayValue]="true"></nb-progress-bar>
+          </td>
+          <td>
+            <span class="status-dot" [ngClass]="'status-' + statusFor(b.status)"></span>{{ b.status }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>
