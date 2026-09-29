@@ -87,7 +87,7 @@ export class TrafficChartComponent implements AfterViewInit, OnDestroy {
             backgroundColor: trafficTheme.tooltipBg,
             borderColor: trafficTheme.tooltipBorderColor,
             borderWidth: 1,
-            formatter: '{c0} MB',
+            formatter: '{c0}K wires',
             extraCssText: trafficTheme.tooltipExtraCss,
           },
           series: [

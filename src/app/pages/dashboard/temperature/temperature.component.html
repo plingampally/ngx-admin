@@ -19,7 +19,8 @@
         </ngx-temperature-dragger>
       </div>
 
-      <nb-radio-group [(ngModel)]="temperatureMode" name="rate-scenario" class="scenario-group">
+      <nb-radio-group [ngModel]="temperatureMode" (ngModelChange)="applyRateScenario($event)"
+                      name="rate-scenario" class="scenario-group">
         <nb-radio value="base">Base</nb-radio>
         <nb-radio value="hike">+25 bps</nb-radio>
         <nb-radio value="cut">-25 bps</nb-radio>
@@ -44,7 +45,8 @@
         </ngx-temperature-dragger>
       </div>
 
-      <nb-radio-group [(ngModel)]="humidityMode" name="liquidity-scenario" class="scenario-group">
+      <nb-radio-group [ngModel]="humidityMode" (ngModelChange)="applyLiquidityScenario($event)"
+                      name="liquidity-scenario" class="scenario-group">
         <nb-radio value="base">Base</nb-radio>
         <nb-radio value="stress">Stress</nb-radio>
         <nb-radio value="severe">Severe</nb-radio>
